@@ -17,25 +17,26 @@ import redis.clients.jedis.ShardedJedisPipeline;
 import redis.clients.jedis.ShardedJedisPool;
 import redis.clients.jedis.Transaction;
 
-
-
 public class TestRedis {
 
     private static Jedis jedis;
     private static ShardedJedis sharding;
     private static ShardedJedisPool pool;
-
+    private static JedisPoolConfig config ;
+    
+    
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         List<JedisShardInfo> shards = Arrays.asList(
-                new JedisShardInfo("localhost",6379),
-                new JedisShardInfo("localhost",6379)); //使用相同的ip:port,仅作测试
+                new JedisShardInfo("127.0.0.1",6379),
+                new JedisShardInfo("127.0.0.1",6379)); //使用相同的ip:port,仅作测试
 
 
         jedis = new Jedis("localhost"); 
         sharding = new ShardedJedis(shards);
-
-        pool = new ShardedJedisPool(new JedisPoolConfig(), shards);
+       // pool = new ShardedJedisPool(new JedisPoolConfig(), shards);
+        config = new JedisPoolConfig();
+        pool = new ShardedJedisPool(config, shards);
     }
 
     @AfterClass
